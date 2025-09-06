@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            padding: 0;
+            height: 0;
+        }
+        .container{
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            height: 90vh;
+            object-fit: cover;
+        }
+        .inner-container{
+            width: 270px;
+            height: 260px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        .inner-container button{
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background-color: #0EAD69;
+            border: none;
+            font-size: 40px;
+            color: black;
+        }
+        p{
+            background: #805E73;
+            border-radius: 20px;
+            font-size: 20px;
+            padding: 5px 10px 5px 10px;
+            height: 20px;
+        }
+        .new-game,.reset{
+            margin-bottom: 20px;
+            background: #87BCDE;
+            border-radius: 20px;
+            font-size: 15px;
+            padding: 6px;
+            height: 40px;
+            justify-content: center;
+            border: none;
+        }
+        .reset{
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .hide{
+            display: none;
+        }
+        .winner-notification{
+            width: 200px;
+            background-color: #1943a6;
+            text-align: center;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 40px;
+            padding: 5px;
+            height: 50px;
+        }
+        .another{
+            width: 200px;
+            background-color: #1943a6;
+            text-align: center;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 40px;
+            padding: 5px;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <p class="winner-notification hide"></p>
+        <p>Tic Tac Toe</p>
+        <button class="new-game">New Game</button>
+        <div class="inner-container">
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+        </div>
+        <button class="reset">reset button</button>
+    </div>
+    <script>
+        let btns = document.querySelectorAll(".inner-container button");
+        let final_winner = document.querySelector(".winner-notification")
+        let new_game = document.querySelector(".new-game");
+        let reset_game = document.querySelector(".reset");
+        let count =0;
+        let draw = false;
+        let ans = false;
+        let chance = true;
+        let value_choice;
+        let winning_condition =[
+            [0,1,2],
+            [3,4,5],
+            [6,7,8],
+            [0,3,6],
+            [1,4,7],
+            [2,5,8],
+            [0,4,8],
+            [2,4,6]
+        ]
+
+
+
+let If_else = (ans)=>{
+         while(ans == false){
+            let prom = prompt("what do you want to choose! (X/O):-");
+            if (prom=="o" || prom=="x"){
+                ans = true;
+                value_choice = prom;
+            }else{
+                ans = false;
+            }
+        }
+}
+
+
+
+        If_else(ans);
+        let alternate_value = value_choice == "x"?  "o" :  "x";
+        btns.forEach((single_btn)=>{
+            single_btn.addEventListener("click",()=>{
+                if(chance == true){
+                    single_btn.innerHTML = value_choice;
+                    chance = false;
+                }else{
+                    single_btn.innerHTML = alternate_value;
+                    chance = true;
+                }
+                count+=1;
+                single_btn.disabled = true;
+                checkwinner();
+            })            
+        })
+
+
+        let checkwinner = ()=>{
+            let draw = false;
+            for(let winning_chances of winning_condition){
+                let pos1val = btns[winning_chances[0]].innerHTML;
+                let pos2val = btns[winning_chances[1]].innerHTML;
+                let pos3val = btns[winning_chances[2]].innerHTML;
+                if(pos1val !="" && pos2val != "" && pos3val != ""){
+                    if(pos1val == pos2val && pos2val == pos3val){
+                      final_winner.innerHTML = `winner is ${pos1val}`
+                      final_winner.classList.remove("hide");
+                      draw = true;
+                      for(let stop of btns){
+                        stop.disabled = true;
+                      }
+                    }else if(count == 9 && draw ==false){
+                       final_winner.innerHTML = `match was draw!`
+                       final_winner.classList.replace("hide","another");
+                    }
+                }
+            }
+        }
+    
+    
+        let start = ()=>{
+            for(let again_disabled of btns){
+                again_disabled.innerHTML = "";
+                again_disabled.disabled = false;
+            }
+            final_winner.classList.add("hide");
+            count =0;
+            final_winner.classList.replace("another","hide")
+            draw=false;
+            value_choice = "";
+            If_else(false);
+            alternate_value = value_choice == "x"? "o" : "x";
+            chance = true;
+        }
+        new_game.addEventListener("click",start);
+        reset_game.addEventListener("click",start);
+    </script>
+</body>
+</html>
